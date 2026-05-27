@@ -1,0 +1,72 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import { getCollection } from 'astro:content';
+
+const all      = await getCollection('projects');
+const featured = all.find(p => p.data.featured);
+const past     = all.filter(p => !p.data.featured).sort((a, b) => {
+  const ao = a.data.order ?? 999;
+  const bo = b.data.order ?? 999;
+  if (ao !== bo) return ao - bo;
+  return b.data.date.localeCompare(a.data.date);
+});
+---
+
+<Base title="Projects - Thien Nguyen">
+  <Nav active="projects" solid />
+  <div class="projects-page">
+
+    {featured && (
+      <div class="projects-featured-wrap">
+        <a href={`/projects/${featured.id}`} class="featured-card-link">
+          <div class="featured-card">
+            {/\.(mp4|mov|webm)$/i.test(featured.data.heroSrc ?? '') ? (
+              <video class="featured-card-media" autoplay loop muted playsinline>
+                <source src={featured.data.heroSrc} type="video/mp4" />
+              </video>
+            ) : (
+              <img class="featured-card-media" src={featured.data.thumbnail} alt={featured.data.thumbnailAlt} />
+            )}
+            <div class="featured-card-body">
+              <p class="featured-card-label">★ Featured</p>
+              <h2 class="featured-card-title">{featured.data.title}</h2>
+              <p class="featured-card-summary">{featured.data.summary}</p>
+              <div class="featured-card-tags">
+                {featured.data.tags.map(t => <span class="project-tag">{t}</span>)}
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    )}
+
+    <div class="past-projects-wrap">
+      <ul class="article-list">
+        {past.map(p => {
+          const href = p.data.externalUrl ?? `/projects/${p.id}`;
+          const external = !!p.data.externalUrl;
+          return (
+            <li class="article-item">
+              <a class="article-img-link" href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
+                <img src={p.data.thumbnail} alt={p.data.thumbnailAlt} style={[
+                  p.data.thumbnailPosition ? `object-fit: cover; object-position: ${p.data.thumbnailPosition}` : '',
+                  p.data.thumbnailScale ? `object-fit: contain; transform: scale(${p.data.thumbnailScale})` : '',
+                ].filter(Boolean).join('; ') || undefined} />
+              </a>
+              <a class="article-text-link" href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
+                {p.data.label && <p class="article-label">{p.data.label}</p>}
+                <div class="article-title">{p.data.title}</div>
+                <p class="article-summary">{p.data.summary}</p>
+                <div class="article-tags">
+                  {p.data.tags.map(t => <span class="project-tag">{t}</span>)}
+                </div>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+
+  </div>
+</Base>

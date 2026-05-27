@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import CertCard from '../components/CertCard.astro';
+import { certifications } from '../data/certifications';
+---
+
+<Base title="Certifications - Thien Nguyen">
+  <Nav active="certifications" solid />
+  <main class="certs-page">
+    <h1 class="certs-page-heading">Certifications</h1>
+    <div class="certs-page-grid">
+      {certifications.map(cert => <CertCard cert={cert} />)}
+    </div>
+  </main>
+
+  <div class="certs-lightbox" id="certs-lightbox">
+    <button class="certs-lightbox-close" id="certs-lightbox-close" aria-label="Close">&times;</button>
+    <div class="certs-lightbox-inner" id="certs-lightbox-inner"></div>
+  </div>
+</Base>
+
+<script>
+const lb      = document.getElementById('certs-lightbox')!;
+const inner   = document.getElementById('certs-lightbox-inner')!;
+const closeBtn = document.getElementById('certs-lightbox-close')!;
+
+function open(src: string, type: string) {
+  inner.innerHTML = type === 'image'
+    ? `<img src="${src}" alt="Certificate" />`
+    : `<iframe src="${src}#toolbar=0&navpanes=0&scrollbar=0" title="Certificate"></iframe>`;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function close() {
+  lb.classList.remove('open');
+  inner.innerHTML = '';
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll<HTMLElement>('.cert-card').forEach(card => {
+  card.addEventListener('click', () => open(card.dataset.src!, card.dataset.type!));
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') open(card.dataset.src!, card.dataset.type!);
+  });
+});
+closeBtn.addEventListener('click', close);
+lb.addEventListener('click', e => { if (e.target === lb) close(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+</script>

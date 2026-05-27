@@ -1,0 +1,51 @@
+---
+interface Props { active: string; solid?: boolean }
+const { active, solid } = Astro.props;
+const links = [
+  { label: 'About',          href: '/',                id: 'about' },
+  { label: 'Projects',       href: '/projects',        id: 'projects' },
+  { label: 'Certifications', href: '/certifications',  id: 'certifications' },
+];
+---
+<nav class="nav" style={solid ? 'background:#ffffff' : ''}>
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">Thien Nguyen</a>
+    <ul class="nav-links">
+      {links.map(l => (
+        <li>
+          <a href={l.href} class={active === l.id ? 'active' : ''}>{l.label}</a>
+        </li>
+      ))}
+    </ul>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="nav-mobile-menu" id="nav-mobile-menu">
+    {links.map(l => (
+      <a href={l.href} class={active === l.id ? 'active' : ''}>{l.label}</a>
+    ))}
+  </div>
+</nav>
+
+<script>
+  const hamburger = document.getElementById('nav-hamburger')!;
+  const menu      = document.getElementById('nav-mobile-menu')!;
+
+  hamburger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', String(open));
+  });
+
+  // Close menu on link click
+  menu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      menu.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>

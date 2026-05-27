@@ -1,0 +1,31 @@
+---
+interface Props {
+  title:     string;
+  headers:   string[];
+  rows:      (string | number)[][];
+  totalRow:  (string | number)[];
+  winnerCol: number;
+  caption?:  string;
+}
+const { title, headers, rows, totalRow, winnerCol, caption } = Astro.props;
+---
+
+<div class="matrix-wrap">
+  <table class="decision-matrix">
+    <thead>
+      <tr><th colspan={headers.length} class="matrix-title">{title}</th></tr>
+      <tr>{headers.map(h => <th>{h}</th>)}</tr>
+    </thead>
+    <tbody>
+      {rows.map(row => (
+        <tr>{row.map(cell => <td>{cell}</td>)}</tr>
+      ))}
+      <tr class="matrix-total-row">
+        {totalRow.map((cell, i) => (
+          <td class={i === winnerCol ? 'matrix-winner' : ''}><strong>{cell}</strong></td>
+        ))}
+      </tr>
+    </tbody>
+  </table>
+  {caption && <p class="matrix-caption">{caption}</p>}
+</div>

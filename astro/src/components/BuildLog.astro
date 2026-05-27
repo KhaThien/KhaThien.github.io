@@ -1,0 +1,36 @@
+---
+type Status = 'fixed' | 'working' | 'done' | 'resolved' | 'wip';
+
+interface Entry {
+  title:  string;
+  status: Status;
+  text:   string;
+}
+interface Props { entries: Entry[] }
+const { entries } = Astro.props;
+
+const statusLabel: Record<Status, string> = {
+  fixed:    'Fixed',
+  working:  'Working',
+  done:     'Done',
+  resolved: 'Resolved',
+  wip:      'In Progress',
+};
+const statusClass: Record<Status, string> = {
+  fixed:    'tag-built',
+  working:  'tag-built',
+  done:     'tag-built',
+  resolved: 'tag-built',
+  wip:      'tag-wip',
+};
+---
+
+<ol class="build-log">
+  {entries.map(e => (
+    <li>
+      <strong>{e.title}</strong>
+      <span class={`design-tag ${statusClass[e.status]}`}>{statusLabel[e.status]}</span>
+      <p>{e.text}</p>
+    </li>
+  ))}
+</ol>

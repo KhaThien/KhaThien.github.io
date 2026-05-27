@@ -1,0 +1,155 @@
+---
+import Base from './Base.astro';
+import Nav from '../components/Nav.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  headings?: { depth: number; slug: string; text: string }[];
+}
+const { project, headings = [] } = Astro.props;
+const { title, subtitle, heroSrc, heroAlt, tags } = project.data;
+const isVideo = heroSrc && /\.(mp4|mov|webm)$/i.test(heroSrc);
+const h2s = headings.filter(h => h.depth === 2);
+---
+
+<Base title={`${title} - Thien Nguyen`}>
+  <Nav active="projects" solid />
+  <div class="detail-page">
+    <div class="detail-wrap">
+      <a class="detail-back" href="/projects">← Projects</a>
+
+      {heroSrc && (isVideo
+        ? <video class="detail-hero" autoplay loop muted playsinline>
+            <source src={heroSrc} type="video/mp4" />
+          </video>
+        : <img class="detail-hero" src={heroSrc} alt={heroAlt} />
+      )}
+
+      <h1 class="detail-title">{title}</h1>
+      {subtitle && <p class="detail-meta">{subtitle}</p>}
+
+      {tags.length > 0 && (
+        <div class="project-tags">
+          {tags.map(t => <span class="project-tag">{t}</span>)}
+        </div>
+      )}
+
+      <div class={`detail-body${h2s.length > 0 ? ' has-sidebar' : ''}`}>
+        {h2s.length > 0 && (
+          <aside class="detail-sidebar">
+            <nav class="section-nav">
+              {h2s.map(h => (
+                <a class="section-nav-link" href={`#${h.slug}`}>{h.text}</a>
+              ))}
+            </nav>
+          </aside>
+        )}
+        <div class="project-content">
+          <slot />
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  const headings = Array.from(document.querySelectorAll('.project-content h2'));
+  const links    = Array.from(document.querySelectorAll('.section-nav-link'));
+
+  if (headings.length && links.length) {
+    links[0]?.classList.add('active');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            links.forEach(l => l.classList.remove('active'));
+            const active = document.querySelector(`.section-nav-link[href="#${entry.target.id}"]`);
+            if (active) active.classList.add('active');
+          }
+        });
+      },
+      { rootMargin: '-10% 0px -80% 0px' }
+    );
+
+    headings.forEach(h => observer.observe(h));
+  }
+</script>
+
+<style is:global>
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0rem;
+  }
+  .project-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--muted);
+  }
+
+  .project-content h2 {
+    font-family: var(--font-caps);
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin: 3rem 0 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid #111;
+  }
+  .project-content h3 {
+    font-family: var(--font-caps);
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid #111;
+  }
+  .project-content p  { font-size: 0.97rem; line-height: 1.75; color: var(--text); margin-bottom: 0.85rem; }
+  .project-content ul,
+  .project-content ol { padding-left: 1.4rem; margin: 0.5rem 0 1.25rem; }
+  .project-content li { font-size: 0.97rem; line-height: 1.7; margin-bottom: 0.25rem; }
+  .project-content pre {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 0.8rem 0 1.25rem;
+    background: #f0f0f0;
+    padding: 1rem 1.25rem;
+  }
+  .project-content code {
+    background: #f0f0f0;
+    color: #333;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.83rem;
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+  }
+  .project-content pre code {
+    background: none;
+    padding: 0;
+  }
+  .project-content a { color: var(--text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .project-content a:hover { opacity: 0.7; }
+  .project-content blockquote {
+    font-style: italic;
+    color: var(--muted);
+    border-left: 3px solid var(--border);
+    padding: 0.5rem 1rem;
+    margin: 1rem 0;
+  }
+
+</style>

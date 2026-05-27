@@ -1,0 +1,23 @@
+---
+interface Item {
+  imgSrc:    string;
+  imgAlt:    string;
+  imgStyle?: string;
+  title:     string;
+  text:      string;
+}
+interface Props { items: Item[] }
+const { items } = Astro.props;
+---
+
+<div class="mech-list">
+  {items.map(item => (
+    <div class="mech-item">
+      <img class="mech-item-img" src={item.imgSrc} alt={item.imgAlt} style={item.imgStyle} />
+      <div class="mech-item-desc">
+        <h4 class="component-title">{item.title}</h4>
+        <p>{item.text}</p>
+      </div>
+    </div>
+  ))}
+</div>

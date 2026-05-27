@@ -1,0 +1,71 @@
+---
+interface Slide {
+  src:   string;
+  alt?:  string;
+  type?: 'video';
+}
+interface Props {
+  id:          string;
+  slides:      Slide[];
+  autoplay?:   boolean;
+  intervalMs?: number;
+}
+const { id, slides, autoplay = true, intervalMs = 5000 } = Astro.props;
+---
+
+<div class="img-gallery" id={id} data-autoplay={String(autoplay)} data-interval={intervalMs}>
+  {slides.map((s, i) => (
+    s.type === 'video'
+      ? <video class={`gallery-slide${i === 0 ? ' active' : ''}`} src={s.src} controls playsinline></video>
+      : <img   class={`gallery-slide${i === 0 ? ' active' : ''}`} src={s.src} alt={s.alt ?? ''} />
+  ))}
+  <button class="gallery-arrow gallery-arrow-left"  aria-label="Previous">&#8249;</button>
+  <button class="gallery-arrow gallery-arrow-right" aria-label="Next">&#8250;</button>
+  <div class="gallery-dots">
+    {slides.map((_, i) => (
+      <button class={`gallery-dot${i === 0 ? ' active' : ''}`} aria-label={`Slide ${i + 1}`}></button>
+    ))}
+  </div>
+</div>
+
+<script>
+document.querySelectorAll<HTMLElement>('.img-gallery:not([data-wired])').forEach(el => {
+  el.dataset.wired = '1';
+  const slides     = Array.from(el.querySelectorAll<HTMLElement>('.gallery-slide'));
+  const dots       = Array.from(el.querySelectorAll<HTMLButtonElement>('.gallery-dot'));
+  const left       = el.querySelector<HTMLButtonElement>('.gallery-arrow-left')!;
+  const right      = el.querySelector<HTMLButtonElement>('.gallery-arrow-right')!;
+  const autoplay   = el.dataset.autoplay === 'true';
+  const intervalMs = parseInt(el.dataset.interval ?? '5000');
+
+  let current = 0;
+  let timer: ReturnType<typeof setInterval> | null = null;
+
+  function isVideo(el: HTMLElement): el is HTMLVideoElement { return el instanceof HTMLVideoElement; }
+
+  function pauseVideos() {
+    slides.forEach(s => { if (isVideo(s)) { s.pause(); s.currentTime = 0; } });
+  }
+  function goTo(n: number) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    pauseVideos();
+    current = ((n % slides.length) + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    if (isVideo(slides[current])) stop();
+  }
+  function start() { if (autoplay && !timer) timer = setInterval(() => goTo(current + 1), intervalMs); }
+  function stop()  { if (timer) { clearInterval(timer); timer = null; } }
+
+  dots.forEach((dot, i) => dot.addEventListener('click', () => { stop(); goTo(i); start(); }));
+  left.addEventListener('click',  () => { stop(); goTo(current - 1); start(); });
+  right.addEventListener('click', () => { stop(); goTo(current + 1); start(); });
+  slides.forEach(s => {
+    if (isVideo(s)) s.addEventListener('ended', () => { goTo(current + 1); start(); });
+  });
+  el.addEventListener('mouseenter', stop);
+  el.addEventListener('mouseleave', () => { if (!isVideo(slides[current])) start(); });
+  start();
+});
+</script>

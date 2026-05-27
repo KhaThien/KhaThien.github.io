@@ -1,0 +1,42 @@
+---
+title: Transport Phenomena
+summary: Three papers applying transport phenomena analysis through SolidWorks CFD simulations and analytical methods, covering momentum transfer in an intersecting pipe network, heat transfer in a double-pipe heat exchanger, and mass transfer in a hemodialysis system.
+thumbnail: /projects/images/transport-phenomena/transport-hero.png
+thumbnailAlt: Transport Phenomena analysis
+tags: [CFD Simulation, Solidworks, Fluid Dynamics, Heat Transfer, Mass Transfer, Analytical Methods]
+date: "2020-05"
+featured: false
+order: 4
+subtitle: "GCU · Spring 2020"
+---
+
+import DocSection from '../../components/DocSection.astro';
+
+## Intersecting Pipe Network
+
+A SolidWorks flow simulation of an intersecting pipe network was used to analyze laminar and turbulent velocity profiles. The Reynolds number at the inlet of the main pipe was 500, below the 2100 threshold, confirming laminar inflow. The velocity profile at the main pipe inlet matched the laminar theory curve and displayed a bell-shaped, axisymmetric form.
+
+The intersecting pipe inlet exhibited a fully developed turbulent profile, which is wider and more uniform than the laminar profile. Both flows show the highest velocity at the pipe center, but turbulent flow maintains near-uniform velocity across the cross-section due to the dominance of inertial forces over viscous drag. The laminar profile, by contrast, illustrates momentum diffusion driven by viscosity and shear forces from the center outward to the pipe wall.
+
+## Heat Exchanger
+
+A SolidWorks model of a double-pipe heat exchanger was built and simulated in both co-current and counter-current orientations. Non-dimensional velocity profiles and laminar theory curves were plotted for the pipe and annular flows. The total rate of heat transfer was determined from bulk enthalpies extracted from the simulations, and compared between the hot and cold flow streams.
+
+The overall heat transfer coefficient was calculated analytically and compared against the simulation results for both flow configurations. The analysis was used to determine which orientation transfers the most heat and to evaluate the accuracy of CFD simulation against analytical methods.
+
+## Dialysis
+
+Mathematical models of hemodialysis were developed to analyze and predict system efficiency. The countercurrent dialysis system consists of a blood flow stream and a dialysate flow stream separated by a semipermeable membrane. Toxin particles are transported from the blood region through the membrane into the dialysate, which is then discarded.
+
+Mass transfer analysis was applied to model the rate of toxin removal as a function of system parameters. The study highlights how transport phenomena principles can be used to improve the design and performance of life-critical medical systems.
+
+## Documents
+
+<DocSection
+  intro="The three papers below cover each transport phenomena topic."
+  docs={[
+    { title: 'Intersecting Pipe Network', desc: 'SolidWorks flow simulation and velocity profile analysis of a laminar and turbulent pipe network.', src: '/projects/transport-phenomena/SolidWorks%20Intersecting%20Pipe%20Network%20Simulation.pdf' },
+    { title: 'Heat Exchanger',            desc: 'Co-current and counter-current double-pipe heat exchanger simulation and heat transfer analysis.',  src: '/projects/transport-phenomena/Heat%20Exchangers.pdf' },
+    { title: 'Dialysis',                  desc: 'Mass transfer modeling of a countercurrent hemodialysis system.',                                    src: '/projects/transport-phenomena/Dialysis.pdf' },
+  ]}
+/>

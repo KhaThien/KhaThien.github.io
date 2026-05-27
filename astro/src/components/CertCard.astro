@@ -1,0 +1,25 @@
+---
+import type { Cert } from '../data/certifications';
+interface Props { cert: Cert }
+const { cert } = Astro.props;
+---
+
+<div
+  class="cert-card"
+  data-src={cert.src}
+  data-type={cert.type}
+  tabindex="0"
+  role="button"
+  aria-label={`View ${cert.title}`}
+>
+  <div class={`cert-card-preview${cert.type === 'pdf' ? ' cert-card-preview--pdf' : ''}`}>
+    {cert.type === 'image'
+      ? <img src={cert.src} alt={cert.title} />
+      : <iframe src={`${cert.src}#toolbar=0&navpanes=0&scrollbar=0`} title={cert.title} tabindex="-1"></iframe>
+    }
+  </div>
+  <div class="cert-card-meta">
+    <p class="cert-card-title">{cert.title}</p>
+    <span class="cert-card-issued">Issued {cert.issued}</span>
+  </div>
+</div>

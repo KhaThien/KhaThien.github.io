@@ -1,0 +1,44 @@
+---
+type Status = 'eliminated' | 'built' | 'wip' | 'shelf';
+
+interface Item {
+  imgSrc:    string;
+  imgAlt:    string;
+  imgStyle?: string;
+  title:     string;
+  status:    Status;
+  text:      string;
+}
+interface Props { items: Item[] }
+const { items } = Astro.props;
+
+const statusLabel: Record<Status, string> = {
+  eliminated: 'Eliminated',
+  built:      'Built & Working',
+  wip:        'Iterating',
+  shelf:      'On the Shelf',
+};
+const statusClass: Record<Status, string> = {
+  eliminated: 'tag-elim',
+  built:      'tag-built',
+  wip:        'tag-wip',
+  shelf:      'tag-wip',
+};
+---
+
+<div class="concept-layout">
+  {items.map(item => (
+    <div class="concept-item">
+      <div class="concept-img-wrap">
+        <img class="concept-img" src={item.imgSrc} alt={item.imgAlt} style={item.imgStyle} />
+      </div>
+      <div>
+        <p>
+          <strong>{item.title}</strong>
+          <span class={`design-tag ${statusClass[item.status]}`}>{statusLabel[item.status]}</span>
+        </p>
+        <p>{item.text}</p>
+      </div>
+    </div>
+  ))}
+</div>

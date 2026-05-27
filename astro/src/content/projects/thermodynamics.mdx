@@ -1,0 +1,41 @@
+---
+title: Thermodynamics
+summary: "Two papers applying thermodynamics to real building systems: an HVAC design comparing hybrid swamp cooler and AC-only approaches for a Phoenix home, and a heat load analysis calculating the energy required to maintain a constant temperature inside the GCU Arena."
+thumbnail: /projects/images/HVAC/thermo-laws.svg
+thumbnailAlt: 4 laws of thermodynamics
+tags: [Thermodynamics, HVAC, Cost Analysis, Energy Analysis, Heat Transfer, System Design, Energy Balance]
+date: "2019-12"
+featured: false
+order: 5
+subtitle: "Thermodynamics · Dec 2019"
+---
+
+import DocSection from '../../components/DocSection.astro';
+
+## HVAC System Design
+
+Thermodynamics was one of my favorite courses because it felt like I was studying the combination of chemistry and physics, and it had a lot of math. Below is an HVAC design for a standard-size residential home completed by me and three other members during our junior year. When possible, I would love to get a chance to pick up Thermodynamic concepts again in one of my future projects.
+
+The design compared a hybrid swamp cooler and AC approach against a full AC-only system for an average 1,832 sq ft Phoenix home. Thermodynamic calculations and cost analysis across all 12 months showed the hybrid saves approximately \$293 per year, roughly \$3,000 over a decade.
+
+## GCU Arena Energy Analysis
+
+This paper calculates the total energy that must be absorbed by an air-conditioning system to maintain a constant temperature of 23°C inside the GCU Arena. Because the target temperature is constant, the change in internal energy is zero, meaning the AC must absorb exactly the total heat released by all sources inside the arena.
+
+The heat sources accounted for include lighting, beverages, electronics, and people. The total energy load and required cooling power were calculated as follows:
+
+$$E_{\text{total}} = Q_{\text{light}} + Q_{\text{drink}} + Q_{\text{chip}} + Q_{\text{people}} = 111{,}753 + 119{,}592 + 248{,}502 + 7{,}668{,}000 = 7{,}908{,}663 \ \text{kJ}$$
+
+Converting to horsepower over the event duration (5,400 seconds):
+
+$$P_{\text{total}} = \frac{7{,}908{,}663{,}000 \ \text{J}}{5{,}400 \ \text{s} \times 746 \ \text{J/s per hp}} = 1{,}963 \ \text{hp}$$
+
+## Documents
+
+<DocSection
+  intro="The two papers below cover each thermodynamics analysis."
+  docs={[
+    { title: 'HVAC System Design',      desc: 'Hybrid swamp cooler vs. AC-only design for a Phoenix home with full cost analysis.', src: '/projects/hvac/HVAC%20System%20Design.pdf' },
+    { title: 'GCU Arena Energy Analysis', desc: 'Heat load calculation to determine the cooling power needed to maintain 23°C in the GCU Arena.', src: '/projects/hvac/GCU%20Arena%20Energy.pdf' },
+  ]}
+/>
