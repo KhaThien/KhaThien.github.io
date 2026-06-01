@@ -1,0 +1,184 @@
+---
+title: Thermal CFD Analysis of a 280Ah LFP Battery Cell
+summary: A CFD study of a commercial 280Ah LFP prismatic cell under natural convection, using SolidWorks Flow Simulation to establish steady-state temperature baselines for a single cell and a 100-cell stack before introducing active cooling.
+thumbnail: /projects/images/battery-management/multiple-cells-cutplot.png
+thumbnailAlt: Thermal CFD result of 100-cell LFP battery stack under natural convection
+tags: [CFD, SolidWorks Flow Simulation, Thermal Analysis, Battery]
+date: "2026-05"
+featured: false
+order: 2
+heroSrc: /projects/images/battery-management/one-cell-cfd.png
+heroAlt: Thermal CFD result of 100-cell LFP battery stack under natural convection
+subtitle: "Thermal Management · May 2026"
+---
+
+import ImageGrid from '../../components/ImageGrid.astro';
+
+## Objective
+
+This study examines the thermal behavior of a commercial 280Ah Lithium Iron Phosphate (LFP) battery cell under natural convection. The goal is to determine the maximum steady-state temperature that a single cell, as well as a stack of multiple cells, reaches in a stationary ambient environment without active cooling. Establishing this baseline is necessary before introducing forced convection or liquid cooling in future analyses.
+
+## Studies Overview
+
+Two studies were conducted to investigate the cell's thermal behavior under different conditions:
+
+- **Study #1:** A single battery cell within a small computational domain.
+- **Study #2:** 100 cells arranged in five vertically stacked layers, each layer containing two parallel rows of ten cells. Within each layer, the two rows are separated by a 3 mm gap, and adjacent layers are separated by a 5 mm gap, within a properly sized computational domain.
+
+Both studies were simulated under natural convection at 1 atm and 25°C ambient.
+
+## Battery Specifications and Heat Generation
+
+### Cell
+
+The model is based on the REPT Battero 280Ah prismatic LFP cell, with a nominal voltage of 3.2V and dimensions of 71.7 × 174 × 206.8 mm. The manufacturer's datasheet recommends a 0.5C discharge rate for maximizing cycle life, and this rate was selected as the operating condition for the simulation.
+
+### Material Properties
+
+The cell was modeled as a single homogenized solid using the following effective properties:
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
+  <colgroup>
+    <col style="width:28%" />
+    <col style="width:28%" />
+    <col style="width:44%" />
+  </colgroup>
+  <thead>
+    <tr style="border-bottom:2px solid var(--border);">
+      <th style="text-align:left; padding:0.6rem 1rem 0.6rem 0;">Property</th>
+      <th style="text-align:left; padding:0.6rem 1rem;">Value</th>
+      <th style="text-align:left; padding:0.6rem 0 0.6rem 1rem;">Source</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:0.6rem 1rem 0.6rem 0;">Density</td>
+      <td style="padding:0.6rem 1rem;">1934.2 kg/m³</td>
+      <td style="padding:0.6rem 0 0.6rem 1rem;">[ASME ref]</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:0.6rem 1rem 0.6rem 0;">Specific heat</td>
+      <td style="padding:0.6rem 1rem;">1399 J/kg·K</td>
+      <td style="padding:0.6rem 0 0.6rem 1rem;">[ASME ref]</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:0.6rem 1rem 0.6rem 0;">Thermal conductivity</td>
+      <td style="padding:0.6rem 1rem;">1 W/m·K (isotropic)</td>
+      <td style="padding:0.6rem 0 0.6rem 1rem;">[ASME ref], through-plane</td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem 0.6rem 0;">Internal resistance</td>
+      <td style="padding:0.6rem 1rem;">0.2 mΩ</td>
+      <td style="padding:0.6rem 0 0.6rem 1rem;">REPT datasheet (≤0.3 mΩ)</td>
+    </tr>
+  </tbody>
+</table>
+
+The thermal conductivity was deliberately set to the through-plane value of 1 W/m·K and applied isotropically. Real LFP cells are anisotropic, conducting heat much more efficiently along their electrode layers than across them. By assuming the lower value in all directions, heat is forced to spread more slowly through the cell, which leads to an over-prediction of internal temperatures.
+
+### Heat Generation Calculation
+
+At 0.5C discharge, the current flowing through each cell is:
+
+$I = 0.5 \times 280 \ \text{Ah} = 140 \ \text{A}$
+
+Applying Joule's law for ohmic heating:
+
+$P = I^2 \times R = (140)^2 \times 0.0002 = 3.92 \ \text{W per cell}$
+
+This value was applied as a constant volumetric heat source on each cell in the simulation.
+
+<ImageGrid cols={2} images={[
+  { src: '/projects/images/battery-management/thermodynamics-cal-1-27.jpg', alt: 'Hand calculations page 1', style: 'object-fit:contain;background:#fff' },
+  { src: '/projects/images/battery-management/thermodynamics-cal-2-28.jpg', alt: 'Hand calculations page 2', style: 'object-fit:contain;background:#fff' },
+]} />
+
+## Simulation Setup
+
+The simulations were performed in SolidWorks 2025 Flow Simulation using an external, steady-state analysis. Fluid flow, conduction through solids, and gravity (in the −Y direction) were all enabled, with air as the working fluid. The outer faces of the computational domain were defined as open boundaries at 25°C and 1 atm, allowing air to enter and exit freely. Any solid bodies without an assigned material were treated as adiabatic. Initial conditions were set to 25°C, 1 atm, and zero velocity throughout the domain. The global mesh was set to Level 4 with no local refinement, and maximum and average solid temperatures were monitored as convergence goals.
+
+Computational domain sizes differ between the two studies. Study #1 used 0.373 m × 0.407 m × 0.271 m (X × Y × Z), which was intentionally undersized as an initial draft. Study #2 followed published recommendations for natural convection domains, with clearance of approximately three times the rack height above, two times the module width on each side, and one times the rack height below, resulting in a domain of 2.075 m × 3.367 m × 2.446 m (X × Y × Z).
+
+## Results
+
+### Study #1: Single Cell, Small Domain
+
+![Single-cell CFD thermal result](/projects/images/battery-management/one-cell-cfd.png)
+
+{/* [insert a paragraph of description of where to look] */}
+
+The maximum cell temperature in Study #1 reached 44°C, considerably higher than what would be expected from a single cell dissipating only 3.92 W. The cause is the limited domain: the warm plume hit the upper boundary before fully developing, curled back down around the cell, and kept reheating the surrounding air. This is a domain sizing artifact included to show why adequate clearance matters in natural convection setups.
+
+### Study #2: 100 Cells, Properly Sized Domain
+
+<ImageGrid cols={2} images={[
+  { src: '/projects/images/battery-management/multiple-cells-stacked-cfd.png', alt: 'CFD thermal result for 100-cell stack, temperature contour' },
+  { src: '/projects/images/battery-management/multiple-cells-stacked-cfd-2.png', alt: 'CFD thermal result for 100-cell stack, velocity contour' },
+]} />
+
+{/* [insert a paragraph of description of where to look] */}
+
+{/* [insert a sim animation] */}
+
+{/* [insert a paragraph of description of where to look] */}
+
+No recirculation was observed, confirming the domain was properly sized.
+
+The maximum temperature in Study #2 was 26°C, located in the middle row of the second-from-top stack position. This was initially counterintuitive, as the topmost cells were expected to be the hottest. However, the top cells benefit from the full above-clearance of the domain, allowing their own plumes to rise and dissipate freely. The second-from-top cells, on the other hand, experience the worst combination of conditions: they receive heat carried upward from the cells below, they have reduced above-clearance for their own heat to escape, and they are flanked laterally by other cells that limit the inflow of fresh ambient air.
+
+This behavior is visible in the velocity contour, where the densest cluster of high-velocity warm air (shown in red and orange) is located in the narrow gap between the top and second-from-top rows. In a stacked rack arrangement under natural convection, the hottest cells are therefore not at the geometric top or center, but rather at the horizontally middle position one row below the top.
+
+### Results Summary
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
+  <colgroup>
+    <col style="width:12%" />
+    <col style="width:12%" />
+    <col style="width:52%" />
+    <col style="width:24%" />
+  </colgroup>
+  <thead>
+    <tr style="border-bottom:2px solid var(--border);">
+      <th style="text-align:left; padding:0.6rem 1rem 0.6rem 0;">Study</th>
+      <th style="text-align:left; padding:0.6rem 1rem;">Cells</th>
+      <th style="text-align:left; padding:0.6rem 1rem;">Domain Size</th>
+      <th style="text-align:left; padding:0.6rem 0 0.6rem 1rem;">Max Temp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:0.6rem 1rem 0.6rem 0;">1</td>
+      <td style="padding:0.6rem 1rem;">1</td>
+      <td style="padding:0.6rem 1rem;">0.373 m × 0.407 m × 0.271 m</td>
+      <td style="padding:0.6rem 0 0.6rem 1rem;">44°C</td>
+    </tr>
+    <tr>
+      <td style="padding:0.6rem 1rem 0.6rem 0;">2</td>
+      <td style="padding:0.6rem 1rem;">100</td>
+      <td style="padding:0.6rem 1rem;">2.075 m × 3.367 m × 2.446 m</td>
+      <td style="padding:0.6rem 0 0.6rem 1rem;">26°C</td>
+    </tr>
+  </tbody>
+</table>
+
+## Limitations
+
+- Thermal conductivity assumed isotropic at 1 W/m·K (conservative; actual through-plane value applied in all directions)
+- Radiation not modeled (estimated 10–20% additional heat rejection at these temperatures)
+- Heat generation limited to ohmic (I²R) losses; entropic and side-reaction contributions (~20–30%) excluded
+- All cells assumed to discharge identically; cell-to-cell variability not captured
+- Steady-state only; warm-up transient and pulse behavior not modeled
+- No compression pads, busbars, or end plates; cells treated as standalone solids in open air
+
+## Next Steps
+
+- Introduce forced convection to mimic the airflow of an air-conditioned equipment room.
+- Model the cells inside a realistic battery module enclosure, including end plates and compression pads.
+- Add cooling fluid flow (cold plate or immersion cooling) to assess active thermal management strategies.
+- Run a time-dependent (transient) study to capture warm-up behavior and identify the time required to reach thermal equilibrium.
+
+## References
+
+Wang, Y., Yin, X., Li, X., Li, H., Liu, S., Zhu, X., & Ma, X. (2024). Minimum Air Cooling Requirements for Different Lithium-Ion Battery Operating Statuses Available to Purchase. *ASME Journal of Heat and Mass Transfer*, 146(10), 101501.
+
+REPT Battero Energy Co., Ltd. *Battery Cell Product Specifications.*
