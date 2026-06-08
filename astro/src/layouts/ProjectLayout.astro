@@ -20,7 +20,7 @@ const h2s = headings.filter(h => h.depth === 2);
       <a class="detail-back" href="/projects">← Projects</a>
 
       {heroSrc && (isVideo
-        ? <video class="detail-hero" autoplay loop muted playsinline>
+        ? <video class="detail-hero" controls>
             <source src={heroSrc} type="video/mp4" />
           </video>
         : <img class="detail-hero" src={heroSrc} alt={heroAlt} />
@@ -54,6 +54,12 @@ const h2s = headings.filter(h => h.depth === 2);
 </Base>
 
 <script>
+  const heroVid = document.querySelector('.detail-hero') as HTMLVideoElement | null;
+  if (heroVid && heroVid.tagName === 'VIDEO') {
+    heroVid.volume = 0.2;
+    heroVid.playbackRate = 1.5;
+  }
+
   const headings = Array.from(document.querySelectorAll('.project-content h2'));
   const links    = Array.from(document.querySelectorAll('.section-nav-link'));
 
@@ -78,6 +84,7 @@ const h2s = headings.filter(h => h.depth === 2);
 </script>
 
 <style is:global>
+
   .project-tags {
     display: flex;
     flex-wrap: wrap;

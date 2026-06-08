@@ -1,0 +1,28 @@
+---
+interface Props {
+  clips: string[];
+  volume?: number;
+}
+const { clips, volume = 0.2 } = Astro.props;
+---
+
+<div style="width:100%;margin-bottom:2rem;">
+  <video id="demo-video" controls style="width:100%;border-radius:8px;">
+    <source src={clips[0]} type="video/mp4" />
+  </video>
+</div>
+
+<script define:vars={{ clips, volume }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const vid = document.getElementById('demo-video');
+    if (!vid) return;
+    let idx = 0;
+    vid.volume = volume;
+    vid.addEventListener('ended', () => {
+      idx = (idx + 1) % clips.length;
+      vid.src = clips[idx];
+      vid.load();
+      vid.play();
+    });
+  });
+</script>

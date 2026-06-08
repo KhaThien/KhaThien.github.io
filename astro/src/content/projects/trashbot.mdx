@@ -6,7 +6,7 @@ thumbnailAlt: Trashbot platform in action
 tags: [Wireless Communication, Brushless DC Motor, Solidworks, 3D Printing, Fabrication, Electronics, KiCad]
 date: "2026-02"
 featured: true
-heroSrc: /projects/images/trashbot/assem-animation-loop.mp4
+heroSrc: /projects/images/trashbot/demo-combined.mp4
 heroAlt: Trashbot assembly animation
 subtitle: "Feb 2026 - Present"
 ---
@@ -18,7 +18,28 @@ import BuildLog from '../../components/BuildLog.astro';
 import ProcurementTable from '../../components/ProcurementTable.astro';
 import ImageGrid from '../../components/ImageGrid.astro';
 
+## Current Progress
+
+Swapped out the lithium-ion battery for lead acid batteries. They are cheaper, easier to find, and handle extreme weather better. The tradeoff is they are heavier and larger, so they now sit on top of the platform instead of underneath.
+
+Tried implementing PID tuning in the motor control program to help the robot drive smoothly up and down hills without manually adjusting power. The motor sensors turned out to be too limited to get reliable straight-line movement, so the robot drifts more than expected.
+
+With PID on, the robot struggles to drive straight. Without PID and using hardcoded speed values, the hoverboard wheels either cog under low power or become unpredictable at higher power. The remote controller works well and gives solid directional control, but the underlying hardware limitations make it hard to integrate everything reliably.
+
+---> In short, the hardware choices are causing more problems than they are worth at this stage.
+
+**Next Steps:** After reflecting on the current limitations, I decided to redesign the robot with more reliable hardware:
+
+- Larger wheels with proper suspension to replace the hoverboard wheels
+- Switch from a carrier style to a pull/push design (concept #3) for better scalability and easier maintenance
+- VESC motor controllers for reliability and proper PID support
+- Raspberry Pi to replace the ESP32 for better documentation and processing capability
+
 ## The Story
+
+<video autoplay loop muted playsinline style="width:100%;border-radius:8px;margin-bottom:2rem;">
+  <source src="/projects/images/trashbot/assem-animation-loop.mp4" type="video/mp4" />
+</video>
 
 Recently, I completed some programming courses (MITx 6.00.1x and Harvard CS50) and as I was looking for a final project idea, I came across the thought of building a robot that automates the one task nobody enjoys: taking the trash bin out to the curb (and back in) twice a week. Additionally, most of my neighbors are seniors who struggle most with this task, so the project scope expanded right after it came to my mind.
 
