@@ -13,7 +13,7 @@ var PAGE_CONTENT = {
   ],
 
   resume: {
-    pdfSrc: "assets/Thien-Nguyen-Mech-Eng.pdf"
+    pdfSrc: "assets/Thien-Nguyen-Resume-Eng.pdf"
   }
 
 };
